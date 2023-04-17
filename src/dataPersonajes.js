@@ -78,31 +78,7 @@ const PERSONAJE_DATA = [
   {
     nombre: "Ants in my Eyes Johnson",
     data: "Es un vendedor de electrónica cuyo lema publicitario es '¡Tengo hormigas en mis ojos!', lo que sugiere que tiene una grave discapacidad visual. A pesar de su ceguera aparente, sigue vendiendo productos electrónicos y ofreciendo promociones locas a sus clientes. Su comercial se puede ver en varios episodios de la serie.",
-  },
-  {
-    nombre: "",
-    data: "",
-  },
-  {
-    nombre: "",
-    data: "",
-  },
-  {
-    nombre: "",
-    data: "",
-  },
-  {
-    nombre: "",
-    data: "",
-  },
-  {
-    nombre: "",
-    data: "",
-  },
-  {
-    nombre: "",
-    data: "",
-  },
+  }
 ];
 
 export default PERSONAJE_DATA;

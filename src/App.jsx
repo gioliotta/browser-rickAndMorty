@@ -23,23 +23,21 @@ function App() {
 
   useEffect(() => setPrimeraVez(true), []);
 
+  const detectarResolucion = window.matchMedia("only screen and (max-width: 760px)").matches;
+
   const mostrarTodos = () => {
     setPrimeraVez(false);
     setTodos(!todos);
   };
+
   const handleSubmit = (event) => event.preventDefault();
+
   const handleChangeInput = (e) => {
     setPrimeraVez(false);
     setTodos(false);
     setFiltrarNombre(e.target.value);
     setInputValue(e.target.value);
   };
-
-  function personajesFiltrados() {
-    return personajes.filter((personaje) =>
-      personaje.name.toLowerCase().includes(filtrarNombre.toLowerCase())
-    );
-  }
 
   const manejarCarta = () => setCarta(true);
 
@@ -63,13 +61,29 @@ function App() {
       gender: personajeSeleccionado.gender,
       data: manejarData(personajeSeleccionado.name),
     };
-  }
+  };
+
+  function personajesFiltrados() {
+    return personajes.filter((personaje) =>
+      personaje.name.toLowerCase().includes(filtrarNombre.toLowerCase())
+    );
+  };
+
+  //? Resolución.
+  const Body = document.querySelector("body");
+  const dispositivoMovil = () => Body.classList.add("fondo-celulares");
+  const quitarDispositivoMovil = () => Body.classList.remove("fondo-celulares");
 
   return (
     <div className="App">
-      <video autoPlay muted loop id="video-fondo">
-        <source src={videoFondo} type="video/mp4" />
-      </video>
+      {detectarResolucion
+        ? dispositivoMovil()
+        : (quitarDispositivoMovil(),
+          (
+            <video autoPlay muted loop id="video-fondo">
+              <source src={videoFondo} type="video/mp4" />
+            </video>
+          ))}
 
       {carta ? (
         personajesFiltrados().find(
@@ -158,6 +172,6 @@ function App() {
       )}
     </div>
   );
-}
+};
 
 export default App;

@@ -3,27 +3,57 @@ import SinCoincidencias from "./components/SinCoincidencias";
 import PrimeraVez from "./components/PrimeraVez";
 import videoFondo from "./assets/video/videoFondo.mp4";
 import Carta from "./components/Carta";
-import PERSONAJE_DATA from "./dataPersonajes";
+import CambiarPag from "./components/CambiarPag";
+import { MdDeleteOutline as Delete } from "react-icons/md"
+import { PuffLoader as Cargando } from "react-spinners";
+
+/*
+TODO: 
+-
+Hacer que el input busque en todas las páginas,
+Buscar mejor font family,
+Centrar img de personajes con input
+*/
 
 function App() {
   const [personajes, setPersonajes] = useState([]);
+  const [nextPage, setNextPage] = useState(1);
   const [filtrarNombre, setFiltrarNombre] = useState("");
-  const [primeraVez, setPrimeraVez] = useState(undefined);
+  const [primeraVez, setPrimeraVez] = useState(null);
   const [todos, setTodos] = useState(false);
   const [carta, setCarta] = useState(false);
   const [seleccion, setSeleccion] = useState(null);
   const [inputValue, setInputValue] = useState("");
+  const [cargando, setCargando] = useState(false);
 
-  useEffect(() => {
-    fetch("https://rickandmortyapi.com/api/character")
+useEffect(() => {
+    const URL_RICK_AND_MORTY = `https://rickandmortyapi.com/api/character?page=${nextPage}`;
+    fetch(URL_RICK_AND_MORTY)
       .then((response) => response.json())
-      .then((data) => setPersonajes(data.results))
+      .then((data) => {
+        setPersonajes(data.results);
+        setTimeout(() => setCargando(false), 900);
+      })
       .catch((error) => console.log(error));
-  }, []);
+  }, [nextPage]);
+
+
+  function personajesFiltrados() {
+    return personajes.filter((personaje) =>
+      personaje.name.toLowerCase().includes(filtrarNombre.toLowerCase())
+    );
+  };
+
 
   useEffect(() => setPrimeraVez(true), []);
 
-  const detectarResolucion = window.matchMedia("only screen and (max-width: 760px)").matches;
+  //? Resolución.
+  const detectarResolucion = window.matchMedia(
+    "only screen and (max-width: 760px)"
+  ).matches;
+  const Body = document.querySelector("body");
+  const dispositivoMovil = () => Body.classList.add("fondo-celulares");
+  const quitarDispositivoMovil = () => Body.classList.remove("fondo-celulares");
 
   const mostrarTodos = () => {
     setPrimeraVez(false);
@@ -41,13 +71,6 @@ function App() {
 
   const manejarCarta = () => setCarta(true);
 
-  const manejarData = (nombrePersonaje) => {
-    const personajeData = PERSONAJE_DATA.find(
-      (data) => data.nombre === nombrePersonaje
-    );
-    return personajeData.data === "" ? "No hay información de momento"  : personajeData.data;
-  };
-
   function obtenerDatos(seleccion) {
     const personajeSeleccionado = personajesFiltrados().find(
       (personaje) => personaje.id === seleccion
@@ -59,20 +82,32 @@ function App() {
       status: personajeSeleccionado.status,
       species: personajeSeleccionado.species,
       gender: personajeSeleccionado.gender,
-      data: manejarData(personajeSeleccionado.name),
+      location: personajeSeleccionado.location.name,
+      episodes: personajeSeleccionado.episode.length
     };
   };
 
-  function personajesFiltrados() {
-    return personajes.filter((personaje) =>
-      personaje.name.toLowerCase().includes(filtrarNombre.toLowerCase())
-    );
+  function cambiarTamañoFuente(elemento) {
+    if (elemento === null) return;
+
+    if (elemento.textContent.length > 16) {
+      elemento.style.fontSize = "14px";
+    }
+
+    if (elemento.textContent.length > 20) {
+      elemento.style.fontSize = "10px";
+    }
+
+    if (elemento.textContent.length > 34) {
+      elemento.style.fontSize = "8px";
+    }
   };
 
-  //? Resolución.
-  const Body = document.querySelector("body");
-  const dispositivoMovil = () => Body.classList.add("fondo-celulares");
-  const quitarDispositivoMovil = () => Body.classList.remove("fondo-celulares");
+  const limpiarInput = () => {
+    setInputValue("");
+    setFiltrarNombre("");
+    setPrimeraVez(true);
+  };
 
   return (
     <div className="App">
@@ -88,31 +123,39 @@ function App() {
       {carta ? (
         personajesFiltrados().find(
           (personaje) => personaje.id === seleccion
-        ) ? (
+        ) && (
           <Carta
             key={seleccion}
             {...obtenerDatos(seleccion)}
             setCarta={setCarta}
           />
-        ) : null
+        )
       ) : (
         <>
           <div
             className={!todos && filtrarNombre === "" ? "contenedor-form" : ""}
           >
-            <form onSubmit={handleSubmit}>
-              <input onChange={handleChangeInput} value={inputValue} />
-              {filtrarNombre === "" && (
-                <button
-                  onClick={mostrarTodos}
-                  className={
-                    todos ? "boton-todos-acitvo" : "boton-todos-desacitvo"
-                  }
-                >
-                  Mostrar Todos
-                </button>
-              )}
-            </form>
+            {!cargando && (
+              <form onSubmit={handleSubmit}>
+                <input
+                  onChange={handleChangeInput}
+                  value={inputValue}
+                  placeholder="Look for a character"
+                />
+                {filtrarNombre === "" ? (
+                  <button
+                    onClick={mostrarTodos}
+                    className={
+                      todos ? "boton-todos-acitvo" : "boton-todos-desacitvo"
+                    }
+                  >
+                    SHOW ALL
+                  </button>
+                ) : (
+                  <Delete className="btn-limpiarInput" onClick={limpiarInput} />
+                )}
+              </form>
+            )}
 
             {primeraVez ? (
               <PrimeraVez />
@@ -124,40 +167,58 @@ function App() {
           </div>
 
           {todos ? (
-            <ul>
-              {personajes.map((personaje) => (
-                <div key={personaje.id}>
-                  <img
-                    src={personaje.image}
-                    alt={`Imagen de ${personaje.name}`}
-                    onClick={() => {
-                      setSeleccion(personaje.id);
-                      manejarCarta();
-                    }}
-                    className="imagen"
-                  />
-
-                  <li>{personaje.name}</li>
-                </div>
-              ))}
-            </ul>
-          ) : !todos && filtrarNombre !== "" ? (
             <>
-              {personajesFiltrados().length > 0 ? (
-                <ul>
-                  {personajesFiltrados().map((personaje) => (
-                    <div key={personaje.id}>
+              {!cargando && (
+                <CambiarPag
+                  nextPage={nextPage}
+                  setNextPage={setNextPage}
+                  setCargando={setCargando}
+                />
+              )}
+
+              {cargando && <Cargando color="#fff" size={80} id="cargando" />}
+
+              {!cargando && (
+                <ul className="ul-personajes">
+                  {personajes.map((personaje) => (
+                    <div className="contenedor-personaje" key={personaje.id}>
                       <img
                         src={personaje.image}
-                        alt={`Imagen de ${personaje.name}`}
                         onClick={() => {
                           setSeleccion(personaje.id);
                           manejarCarta();
                         }}
                         className="imagen"
                       />
+                      <li ref={cambiarTamañoFuente}>{personaje.name}</li>
+                    </div>
+                  ))}
+                </ul>
+              )}
 
-                      <li>{personaje.name}</li>
+              {!cargando && (
+                <CambiarPag
+                  nextPage={nextPage}
+                  setNextPage={setNextPage}
+                  setCargando={setCargando}
+                />
+              )}
+            </>
+          ) : !todos && filtrarNombre !== "" ? (
+            <>
+              {personajesFiltrados().length > 0 ? (
+                <ul className="ul-personajes">
+                  {personajesFiltrados().map((personaje) => (
+                    <div className="contenedor-personaje" key={personaje.id}>
+                      <img
+                        src={personaje.image}
+                        onClick={() => {
+                          setSeleccion(personaje.id);
+                          manejarCarta();
+                        }}
+                        className="imagen"
+                      />
+                      <li ref={cambiarTamañoFuente}>{personaje.name}</li>
                     </div>
                   ))}
                 </ul>
@@ -172,6 +233,6 @@ function App() {
       )}
     </div>
   );
-};
+}
 
 export default App;

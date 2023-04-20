@@ -1,6 +1,6 @@
 export default function SinCoincidencias() {
   return (
-    <h1>No se encontraron coincidencias</h1>
+    <h1 className="coincidencia">No matches found <br /> :( </h1>
   );
 };
 

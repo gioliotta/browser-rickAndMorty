@@ -6,8 +6,9 @@ export default function Carta({
   status,
   species,
   gender,
-  data,
-  setCarta,
+  location,
+  episodes,
+  setCarta
 }) {
   return (
     <>
@@ -20,27 +21,33 @@ export default function Carta({
 
             <h2>
               {" "}
-              <span>Estado: </span> {status === "Alive" ? "Vivo" : status === "Dead" ? "Muerto" : "Desconocido"}
+              <span>Status: </span> {status}
             </h2>
 
             <h2>
               {" "}
-              <span>Especie:</span> {species === "Human" ? "Humano" : species === "Alien" ? "Alien" : "Desconocido"}
+              <span>Species:</span> {species}
             </h2>
 
             <h2>
               {" "}
-              <span>Género:</span>{" "}
-              {gender === "Male"
-                ? "Masculino"
-                : gender === "Female"
-                ? "Femenino"
-                : "Desconocido"}
+              <span>Gender:</span> {gender}
             </h2>
+
+            <h2>
+              {" "}
+              <span>Location:</span> {location}
+            </h2>
+
+            <h2>
+              {" "}
+              <span>Episodes:</span> {episodes}
+            </h2>
+
           </div>
         </div>
 
-        <p className="descripcion-personaje">{data}</p>
+        <p className="descripcion-personaje">Coming soon description...</p>
       </div>
     </>
   );

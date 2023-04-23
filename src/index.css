@@ -111,8 +111,8 @@ color: rgb(255, 84, 84);
   background-color: rgba(00, 00, 00, .6);
   border-radius: 1rem;
   padding: 3rem; 
-   display: flex; 
-   flex-flow: column nowrap; 
+  display: flex; 
+  flex-flow: column nowrap; 
   align-items: center;
   justify-content: center;
 }

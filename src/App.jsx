@@ -13,7 +13,7 @@ function App() {
   const [personajes, setPersonajes] = useState([]);
   const [numeroPaginaActual, setNumeroPaginaActual] = useState(1);
   const [filtrarNombre, setFiltrarNombre] = useState("");
-  const [cuadroDeBusqueda, setCuadroDeBusqueda] = useState(null);
+  const [cuadroDeBusqueda, setCuadroDeBusqueda] = useState(true);
   const [mostrarTodosPersonajes, setMostrarTodosPersonajes] = useState(false);
   const [cartaPersonaje, setCartaPersonaje] = useState(false);
   const [seleccion, setSeleccion] = useState(null);
@@ -23,8 +23,6 @@ function App() {
   const [buscarPersonajesFiltrados, setBuscarPersonajesFiltrados] = useState(
     [],
   );
-
-  useEffect(() => setCuadroDeBusqueda(true), []);
 
   useEffect(() => {
     const URL_RICK_AND_MORTY = `https://rickandmortyapi.com/api/character?page=${numeroPaginaActual}`;
@@ -156,7 +154,13 @@ function App() {
               mostrarTodosPersonajes={mostrarTodosPersonajes}
             />
 
-            {cuadroDeBusqueda && <CuadroDeBusqueda />}
+            {cuadroDeBusqueda && !mostrarTodosPersonajes ? (
+              <CuadroDeBusqueda />
+            ) : !cuadroDeBusqueda &&
+              filtrarNombre === "" &&
+              !mostrarTodosPersonajes ? (
+              <CuadroDeBusqueda />
+            ) : null}
           </div>
 
           {mostrarTodosPersonajes && (

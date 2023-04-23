@@ -124,7 +124,7 @@ color: rgb(255, 84, 84);
 }
 
 /*? Buscar Personaje Texto */
-.primeraVez {
+.cuadroDeBusqueda {
   text-transform: uppercase;
   font-family:'Trebuchet MS', sans-serif;
   text-align: center;
@@ -191,16 +191,6 @@ color: gold;
   cursor: pointer;
   opacity: .9;
   background-color: var(--blanco);
-}
-.descripcion-personaje {
-  background-color: rgba(9, 8, 32, .4);
-  color: var(--blanco);
-  border-radius: 1rem;
-  padding:  .5rem;
-  width: 100%;
-  text-align: center;
-  font-size: 16px;
-  font-family:'Lucida Sans', sans-serif;
 }
 .info-personaje {
   color: var(--blanco);

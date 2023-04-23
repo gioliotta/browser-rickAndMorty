@@ -1,6 +1,6 @@
 import { BsFillArrowLeftSquareFill as Atras } from "react-icons/bs";
 
-export default function Carta({
+export default function CartaPersonaje({
   image,
   nombre,
   status,
@@ -8,17 +8,19 @@ export default function Carta({
   gender,
   location,
   episodes,
-  setCarta
+  setCartaPersonaje,
 }) {
   return (
     <>
-      <Atras onClick={() => setCarta(false)} className="carta-boton-atras" />
+      <Atras
+        onClick={() => setCartaPersonaje(false)}
+        className="carta-boton-atras"
+      />
       <div className="contenedor-carta">
         <div className="hijo-contenedor-carta">
           <img src={image} className="imagen-carta" />
           <div className="info-personaje">
             <h1 className="info-nombre">{nombre}</h1>
-
             <h2>
               {" "}
               <span>Status: </span> {status}
@@ -43,11 +45,8 @@ export default function Carta({
               {" "}
               <span>Episodes:</span> {episodes}
             </h2>
-
           </div>
         </div>
-
-        <p className="descripcion-personaje">Coming soon description...</p>
       </div>
     </>
   );

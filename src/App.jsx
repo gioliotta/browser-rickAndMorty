@@ -1,90 +1,121 @@
 import { useState, useEffect } from "react";
 import SinCoincidencias from "./components/SinCoincidencias";
-import PrimeraVez from "./components/PrimeraVez";
-import videoFondo from "./assets/video/videoFondo.mp4";
-import Carta from "./components/Carta";
+import CuadroDeBusqueda from "./components/CuadroDeBusqueda";
+import CartaPersonaje from "./components/CartaPersonaje";
 import CambiarPag from "./components/CambiarPag";
-import { MdDeleteOutline as Delete } from "react-icons/md"
 import { PuffLoader as Cargando } from "react-spinners";
-
-/*
-TODO: 
--
-Hacer que el input busque en todas las páginas,
-Buscar mejor font family,
-Centrar img de personajes con input
-*/
+import VideoFondo from "./components/VideoFondo";
+import Form from "./components/Form";
+import ListaPersonajes from "./components/ListaPersonajes";
+import ListaPersonajesFiltrados from "./components/ListaPersonajesFiltrados";
 
 function App() {
   const [personajes, setPersonajes] = useState([]);
-  const [nextPage, setNextPage] = useState(1);
+  const [numeroPaginaActual, setNumeroPaginaActual] = useState(1);
   const [filtrarNombre, setFiltrarNombre] = useState("");
-  const [primeraVez, setPrimeraVez] = useState(null);
-  const [todos, setTodos] = useState(false);
-  const [carta, setCarta] = useState(false);
+  const [cuadroDeBusqueda, setCuadroDeBusqueda] = useState(null);
+  const [mostrarTodosPersonajes, setMostrarTodosPersonajes] = useState(false);
+  const [cartaPersonaje, setCartaPersonaje] = useState(false);
   const [seleccion, setSeleccion] = useState(null);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValor, setInputValor] = useState("");
   const [cargando, setCargando] = useState(false);
+  const [filtrarBusqueda, setFiltrarBusqueda] = useState(undefined);
+  const [buscarPersonajesFiltrados, setBuscarPersonajesFiltrados] = useState(
+    [],
+  );
 
-useEffect(() => {
-    const URL_RICK_AND_MORTY = `https://rickandmortyapi.com/api/character?page=${nextPage}`;
+  useEffect(() => setCuadroDeBusqueda(true), []);
+
+  useEffect(() => {
+    const URL_RICK_AND_MORTY = `https://rickandmortyapi.com/api/character?page=${numeroPaginaActual}`;
+    const TIEMPO_CARGA = 900;
+
     fetch(URL_RICK_AND_MORTY)
-      .then((response) => response.json())
-      .then((data) => {
-        setPersonajes(data.results);
-        setTimeout(() => setCargando(false), 900);
+      .then(res => res.json())
+      .then(info => {
+        setPersonajes(info.results);
+        setTimeout(() => setCargando(false), TIEMPO_CARGA);
       })
-      .catch((error) => console.log(error));
-  }, [nextPage]);
+      .catch(error => console.log(error));
+  }, [numeroPaginaActual]);
 
-
-  function personajesFiltrados() {
-    return personajes.filter((personaje) =>
-      personaje.name.toLowerCase().includes(filtrarNombre.toLowerCase())
-    );
-  };
-
-
-  useEffect(() => setPrimeraVez(true), []);
-
-  //? Resolución.
-  const detectarResolucion = window.matchMedia(
-    "only screen and (max-width: 760px)"
+  const DETECTAR_RESOLUCION = window.matchMedia(
+    "only screen and (max-width: 760px)",
   ).matches;
-  const Body = document.querySelector("body");
-  const dispositivoMovil = () => Body.classList.add("fondo-celulares");
-  const quitarDispositivoMovil = () => Body.classList.remove("fondo-celulares");
+  const BODY = document.querySelector("BODY");
+  const QUITAR_VIDEO = () => BODY.classList.add("fondo-celulares");
 
-  const mostrarTodos = () => {
-    setPrimeraVez(false);
-    setTodos(!todos);
+  const PERSONAJES_FILTRADOS = () =>
+    filtrarBusqueda
+      ? buscarPersonajesFiltrados.filter(personaje =>
+          personaje.name.toLowerCase().includes(filtrarNombre.toLowerCase()),
+        )
+      : personajes.filter(personaje =>
+          personaje.name.toLowerCase().includes(filtrarNombre.toLowerCase()),
+        );
+
+  async function filtrarPersonajes(terminoBusqueda) {
+    const ENCONTRAR_PERSONAJES = [];
+    let pagina = 1;
+
+    while (true) {
+      const URL_RICK_AND_MORTY = `https://rickandmortyapi.com/api/character?page=${pagina}`;
+      const RES = await fetch(URL_RICK_AND_MORTY);
+      const data = await RES.json();
+      ENCONTRAR_PERSONAJES.push(...data.results);
+
+      if (data.info.next === null) break;
+      pagina++;
+    }
+
+    return ENCONTRAR_PERSONAJES.filter(personaje =>
+      personaje.name.toLowerCase().includes(terminoBusqueda.toLowerCase()),
+    );
+  }
+
+  const BOTON_TODOS_PERSONAJES = () => {
+    setCuadroDeBusqueda(!cuadroDeBusqueda);
+    setMostrarTodosPersonajes(!mostrarTodosPersonajes);
+    setFiltrarBusqueda(false);
   };
 
-  const handleSubmit = (event) => event.preventDefault();
+  const MANEJAR_CARTA_PERSONAJE = () => setCartaPersonaje(true);
 
-  const handleChangeInput = (e) => {
-    setPrimeraVez(false);
-    setTodos(false);
-    setFiltrarNombre(e.target.value);
-    setInputValue(e.target.value);
-  };
-
-  const manejarCarta = () => setCarta(true);
-
-  function obtenerDatos(seleccion) {
-    const personajeSeleccionado = personajesFiltrados().find(
-      (personaje) => personaje.id === seleccion
+  function obtenerDatosPersonajes(seleccionId) {
+    const PERSONAJE_SELECCIONADO = PERSONAJES_FILTRADOS().find(
+      personaje => personaje.id === seleccionId,
     );
 
     return {
-      image: personajeSeleccionado.image,
-      nombre: personajeSeleccionado.name,
-      status: personajeSeleccionado.status,
-      species: personajeSeleccionado.species,
-      gender: personajeSeleccionado.gender,
-      location: personajeSeleccionado.location.name,
-      episodes: personajeSeleccionado.episode.length
+      image: PERSONAJE_SELECCIONADO.image,
+      nombre: PERSONAJE_SELECCIONADO.name,
+      status: PERSONAJE_SELECCIONADO.status,
+      species: PERSONAJE_SELECCIONADO.species,
+      gender: PERSONAJE_SELECCIONADO.gender,
+      location: PERSONAJE_SELECCIONADO.location.name,
+      episodes: PERSONAJE_SELECCIONADO.episode.length,
     };
+  }
+
+  const LIMPIAR_INPUT = () => {
+    setInputValor("");
+    setFiltrarNombre("");
+    setCuadroDeBusqueda(true);
+  };
+
+  const MANEJAR_INPUT = async e => {
+    setFiltrarBusqueda(true);
+    setCuadroDeBusqueda(false);
+    setMostrarTodosPersonajes(false);
+    setFiltrarNombre(e.target.value);
+    setInputValor(e.target.value);
+
+    if (e.target.value.trim() !== "") {
+      setCargando(true);
+      const RESULTADOS = await filtrarPersonajes(e.target.value);
+      setCargando(false);
+      setBuscarPersonajesFiltrados(RESULTADOS);
+    }
   };
 
   function cambiarTamañoFuente(elemento) {
@@ -101,135 +132,85 @@ useEffect(() => {
     if (elemento.textContent.length > 34) {
       elemento.style.fontSize = "8px";
     }
-  };
-
-  const limpiarInput = () => {
-    setInputValue("");
-    setFiltrarNombre("");
-    setPrimeraVez(true);
-  };
+  }
 
   return (
     <div className="App">
-      {detectarResolucion
-        ? dispositivoMovil()
-        : (quitarDispositivoMovil(),
-          (
-            <video autoPlay muted loop id="video-fondo">
-              <source src={videoFondo} type="video/mp4" />
-            </video>
-          ))}
+      {DETECTAR_RESOLUCION ? QUITAR_VIDEO() : <VideoFondo />}
 
-      {carta ? (
-        personajesFiltrados().find(
-          (personaje) => personaje.id === seleccion
-        ) && (
-          <Carta
-            key={seleccion}
-            {...obtenerDatos(seleccion)}
-            setCarta={setCarta}
-          />
-        )
-      ) : (
+      {!cartaPersonaje && (
         <>
           <div
-            className={!todos && filtrarNombre === "" ? "contenedor-form" : ""}
+            className={
+              !mostrarTodosPersonajes &&
+              filtrarNombre === "" &&
+              "contenedor-form"
+            }
           >
-            {!cargando && (
-              <form onSubmit={handleSubmit}>
-                <input
-                  onChange={handleChangeInput}
-                  value={inputValue}
-                  placeholder="Look for a character"
-                />
-                {filtrarNombre === "" ? (
-                  <button
-                    onClick={mostrarTodos}
-                    className={
-                      todos ? "boton-todos-acitvo" : "boton-todos-desacitvo"
-                    }
-                  >
-                    SHOW ALL
-                  </button>
-                ) : (
-                  <Delete className="btn-limpiarInput" onClick={limpiarInput} />
-                )}
-              </form>
-            )}
+            <Form
+              MANEJAR_INPUT={MANEJAR_INPUT}
+              LIMPIAR_INPUT={LIMPIAR_INPUT}
+              inputValor={inputValor}
+              filtrarNombre={filtrarNombre}
+              BOTON_TODOS_PERSONAJES={BOTON_TODOS_PERSONAJES}
+              mostrarTodosPersonajes={mostrarTodosPersonajes}
+            />
 
-            {primeraVez ? (
-              <PrimeraVez />
-            ) : filtrarNombre === "" && !todos ? (
-              <PrimeraVez />
-            ) : (
-              ""
-            )}
+            {cuadroDeBusqueda && <CuadroDeBusqueda />}
           </div>
 
-          {todos ? (
+          {mostrarTodosPersonajes && (
             <>
-              {!cargando && (
-                <CambiarPag
-                  nextPage={nextPage}
-                  setNextPage={setNextPage}
-                  setCargando={setCargando}
-                />
-              )}
-
               {cargando && <Cargando color="#fff" size={80} id="cargando" />}
 
               {!cargando && (
-                <ul className="ul-personajes">
-                  {personajes.map((personaje) => (
-                    <div className="contenedor-personaje" key={personaje.id}>
-                      <img
-                        src={personaje.image}
-                        onClick={() => {
-                          setSeleccion(personaje.id);
-                          manejarCarta();
-                        }}
-                        className="imagen"
-                      />
-                      <li ref={cambiarTamañoFuente}>{personaje.name}</li>
-                    </div>
-                  ))}
-                </ul>
-              )}
+                <>
+                  <CambiarPag
+                    numeroPaginaActual={numeroPaginaActual}
+                    setNumeroPaginaActual={setNumeroPaginaActual}
+                    setCargando={setCargando}
+                  />
 
-              {!cargando && (
-                <CambiarPag
-                  nextPage={nextPage}
-                  setNextPage={setNextPage}
-                  setCargando={setCargando}
-                />
+                  <ListaPersonajes
+                    personajes={personajes}
+                    setSeleccion={setSeleccion}
+                    MANEJAR_CARTA_PERSONAJE={MANEJAR_CARTA_PERSONAJE}
+                    cambiarTamañoFuente={cambiarTamañoFuente}
+                  />
+
+                  <CambiarPag
+                    numeroPaginaActual={numeroPaginaActual}
+                    setNumeroPaginaActual={setNumeroPaginaActual}
+                    setCargando={setCargando}
+                  />
+                </>
               )}
             </>
-          ) : !todos && filtrarNombre !== "" ? (
+          )}
+
+          {filtrarNombre !== "" && (
             <>
-              {personajesFiltrados().length > 0 ? (
-                <ul className="ul-personajes">
-                  {personajesFiltrados().map((personaje) => (
-                    <div className="contenedor-personaje" key={personaje.id}>
-                      <img
-                        src={personaje.image}
-                        onClick={() => {
-                          setSeleccion(personaje.id);
-                          manejarCarta();
-                        }}
-                        className="imagen"
-                      />
-                      <li ref={cambiarTamañoFuente}>{personaje.name}</li>
-                    </div>
-                  ))}
-                </ul>
+              {PERSONAJES_FILTRADOS().length > 0 ? (
+                <ListaPersonajesFiltrados
+                  PERSONAJES_FILTRADOS={PERSONAJES_FILTRADOS}
+                  setSeleccion={setSeleccion}
+                  MANEJAR_CARTA_PERSONAJE={MANEJAR_CARTA_PERSONAJE}
+                  cambiarTamañoFuente={cambiarTamañoFuente}
+                />
               ) : (
                 <SinCoincidencias />
               )}
             </>
-          ) : (
-            ""
           )}
         </>
+      )}
+
+      {cartaPersonaje && (
+        <CartaPersonaje
+          key={seleccion}
+          {...obtenerDatosPersonajes(seleccion)}
+          setCartaPersonaje={setCartaPersonaje}
+        />
       )}
     </div>
   );

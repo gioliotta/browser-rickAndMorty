@@ -1,21 +1,31 @@
-import { BsArrowLeftSquareFill as BtnLeft, BsArrowRightSquareFill as BtnRight } from "react-icons/bs";
+import {
+  BsArrowLeftSquareFill as BtnLeft,
+  BsArrowRightSquareFill as BtnRight,
+} from "react-icons/bs";
 import { useEffect } from "react";
 
-export default function CambiarPag({ nextPage, setNextPage, setCargando }) {
-  const anteriorPag = () => setNextPage(nextPage === 0 ? 1 : nextPage - 1);
+export default function CambiarPag({
+  numeroPaginaActual,
+  setNumeroPaginaActual,
+  setCargando,
+}) {
+  const anteriorPag = () =>
+    setNumeroPaginaActual(
+      numeroPaginaActual === 0 ? 1 : numeroPaginaActual - 1,
+    );
   const siguientePag = () => {
-    setNextPage(nextPage + 1)
+    setNumeroPaginaActual(numeroPaginaActual + 1);
     setCargando(true);
   };
 
   useEffect(() => {
     const botones = document.querySelectorAll(".cambiarPag-btn");
-    botones.forEach((boton) => {
+    botones.forEach(boton => {
       boton.addEventListener("click", () =>
         window.scrollTo({
           top: 0,
           behavior: "smooth",
-        })
+        }),
       );
     });
   }, []);
@@ -26,4 +36,4 @@ export default function CambiarPag({ nextPage, setNextPage, setCargando }) {
       <BtnRight onClick={siguientePag} className="cambiarPag-btn" />
     </div>
   );
-};
+}

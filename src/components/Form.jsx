@@ -1,8 +1,10 @@
-import { MdDeleteOutline as Delete } from "react-icons/md";
+import { BsArrowLeftCircle as Atras } from "react-icons/bs";
+import { FcSearch as Lupa } from "react-icons/fc";
 
 export default function Form({
   MANEJAR_INPUT,
   LIMPIAR_INPUT,
+  MANEJAR_LUPA_INPUT,
   inputValor,
   filtrarNombre,
   BOTON_TODOS_PERSONAJES,
@@ -12,25 +14,33 @@ export default function Form({
 
   return (
     <form onSubmit={MANEJAR_ENVIO}>
-      <input
-        onChange={MANEJAR_INPUT}
-        value={inputValor}
-        placeholder="Look for a character"
-      />
       {filtrarNombre === "" ? (
         <button
           onClick={BOTON_TODOS_PERSONAJES}
           className={
             mostrarTodosPersonajes
-              ? "boton-todos-acitvo"
-              : "boton-todos-desacitvo"
+              ? "btn-mostrar-todos btn-acitvo"
+              : "btn-mostrar-todos btn-desacitvo"
           }
         >
           SHOW ALL
         </button>
       ) : (
-        <Delete className="btn-limpiarInput" onClick={LIMPIAR_INPUT} />
+        <div className="contenedor-btn-form">
+          <Atras className="btn-limpiarInput" onClick={LIMPIAR_INPUT} />
+        </div>
       )}
+
+      <input
+        id="input-form"
+        onChange={MANEJAR_INPUT}
+        value={inputValor}
+        placeholder="Look for a character"
+      />
+
+      <div className="contenedor-btn-form">
+        <Lupa className="lupa-icono" onClick={MANEJAR_LUPA_INPUT} />
+      </div>
     </form>
   );
 }

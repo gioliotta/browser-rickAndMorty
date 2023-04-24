@@ -9,6 +9,12 @@ import Form from "./components/Form";
 import ListaPersonajes from "./components/ListaPersonajes";
 import ListaPersonajesFiltrados from "./components/ListaPersonajesFiltrados";
 
+/*
+TODO:
+-
+Centrar img con input (móvil)
+*/
+
 function App() {
   const [personajes, setPersonajes] = useState([]);
   const [numeroPaginaActual, setNumeroPaginaActual] = useState(1);
@@ -101,19 +107,40 @@ function App() {
     setCuadroDeBusqueda(true);
   };
 
-  const MANEJAR_INPUT = async e => {
-    setFiltrarBusqueda(true);
-    setCuadroDeBusqueda(false);
-    setMostrarTodosPersonajes(false);
-    setFiltrarNombre(e.target.value);
-    setInputValor(e.target.value);
+  const MANEJAR_INPUT = e => setInputValor(e.target.value);
 
-    if (e.target.value.trim() !== "") {
-      setCargando(true);
-      const RESULTADOS = await filtrarPersonajes(e.target.value);
+  const MANEJAR_LUPA_INPUT = async () => {
+    setCargando(true);
+    const RESULTADOS = await filtrarPersonajes(inputValor);
+    const INPUT = document.getElementById("input-form");
+
+    if (inputValor === "") {
       setCargando(false);
-      setBuscarPersonajesFiltrados(RESULTADOS);
+      setFiltrarBusqueda(true);
+      setMostrarTodosPersonajes(false);
+      setFiltrarNombre(inputValor);
+      INPUT.placeholder = "INPUT IS EMPTY";
+      INPUT.classList.add("input-form-red");
+
+      setTimeout(() => {
+        INPUT.classList.remove("input-form-red");
+        INPUT.placeholder = "Look for a character";
+      }, 2500);
     }
+
+    setTimeout(() => {
+      if (inputValor.trim() !== "") {
+        INPUT.placeholder = "Look for a character";
+        INPUT.classList.remove("input-form-red");
+        setCargando(false);
+        setFiltrarBusqueda(true);
+        setCuadroDeBusqueda(false);
+        setMostrarTodosPersonajes(false);
+        setFiltrarNombre(inputValor);
+        setInputValor(inputValor);
+        setBuscarPersonajesFiltrados(RESULTADOS);
+      }
+    }, 700);
   };
 
   function cambiarTamañoFuente(elemento) {
@@ -140,18 +167,20 @@ function App() {
         <>
           <div
             className={
-              !mostrarTodosPersonajes &&
-              filtrarNombre === "" &&
-              "contenedor-form"
+              !mostrarTodosPersonajes && filtrarNombre === ""
+                ? "contenedor-form"
+                : ""
             }
           >
             <Form
               MANEJAR_INPUT={MANEJAR_INPUT}
               LIMPIAR_INPUT={LIMPIAR_INPUT}
+              MANEJAR_LUPA_INPUT={MANEJAR_LUPA_INPUT}
               inputValor={inputValor}
               filtrarNombre={filtrarNombre}
               BOTON_TODOS_PERSONAJES={BOTON_TODOS_PERSONAJES}
               mostrarTodosPersonajes={mostrarTodosPersonajes}
+              cuadroDeBusqueda={cuadroDeBusqueda}
             />
 
             {cuadroDeBusqueda && !mostrarTodosPersonajes ? (
@@ -194,14 +223,18 @@ function App() {
 
           {filtrarNombre !== "" && (
             <>
-              {PERSONAJES_FILTRADOS().length > 0 ? (
+              {cargando && <Cargando color="#fff" size={80} id="cargando" />}
+
+              {!cargando && PERSONAJES_FILTRADOS().length > 0 && (
                 <ListaPersonajesFiltrados
                   PERSONAJES_FILTRADOS={PERSONAJES_FILTRADOS}
                   setSeleccion={setSeleccion}
                   MANEJAR_CARTA_PERSONAJE={MANEJAR_CARTA_PERSONAJE}
                   cambiarTamañoFuente={cambiarTamañoFuente}
                 />
-              ) : (
+              )}
+
+              {!cargando && PERSONAJES_FILTRADOS().length === 0 && (
                 <SinCoincidencias />
               )}
             </>

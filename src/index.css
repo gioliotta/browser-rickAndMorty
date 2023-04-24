@@ -82,6 +82,7 @@ body {
 /*? Botón Limpiar Input */
 .btn-limpiarInput {
 font-size: 2.5rem;
+height: 2.7rem;
 color: rgb(255, 84, 84);
 }
 .btn-limpiarInput:hover {
@@ -102,7 +103,7 @@ color: rgb(255, 84, 84);
   padding: 10px;
   border-radius: 5px;
   border: none;
-  margin-right: 10px;
+  margin: 0 .5rem;
   outline: none;
   width: 100%;
   background-color: #d7d7d7;
@@ -122,6 +123,30 @@ color: rgb(255, 84, 84);
 .contenedor-form h1 span:last-of-type {
   color: var(--amarillo);
 }
+.contenedor-btn-form{
+  transition-duration: .1s;
+  background-color: rgba(00, 00, 00, .6);
+  border-radius: 100%;
+  height: 2.7rem;
+}
+.contenedor-btn-form:hover {
+  background-color: transparent;
+  outline: none;
+}
+.lupa-icono {
+  font-size: 2.5rem;
+  padding: 3px;
+  transition-duration: .1s;
+}
+.lupa-icono:hover {
+  cursor: pointer;
+  transform: scale(1.3);
+}
+.input-form-red::placeholder {
+  color: rgb(255, 0, 0);
+  font-weight: bold;
+}
+
 
 /*? Buscar Personaje Texto */
 .cuadroDeBusqueda {
@@ -210,37 +235,31 @@ color: gold;
 }
 
 /*? Botón Mostrar Todos*/
-.boton-todos-acitvo {
+.btn-mostrar-todos {
   background-color: transparent;
-  color: var(--verde-claro);
   border-radius: 5px;
   border: none;
-  outline: 2px solid var(--verde-claro);
   cursor: pointer;
   width: 30%; 
-  height: 2.8rem;
+  height: 2.7rem;
   font-weight: 600;
   font-family: Arial, Helvetica, sans-serif;
   transition-duration: .2s;
+  margin: 0 10px;
 }
-.boton-todos-acitvo:hover {
+.btn-acitvo {
+  color: var(--verde-claro);
+  outline: 2px solid var(--verde-claro);
+}
+.btn-acitvo:hover {
   background-color: var(--verde-claro);
   color: #686868;
 }
-.boton-todos-desacitvo {
-  background-color: transparent;
+.btn-desacitvo {
   color: var(--rojo-claro);
-  border-radius: 5px;
-  border: none;
   outline: 2px solid var(--rojo-claro);
-  cursor: pointer;
-  width: 30%; 
-  height: 2.8rem;
-  font-weight: 600;
-  font-family: Arial, Helvetica, sans-serif;
-  transition-duration: .2s;
 }
-.boton-todos-desacitvo:hover {
+.btn-desacitvo:hover {
   background-color: var(--rojo-claro);
   color: var(--blanco);
 }

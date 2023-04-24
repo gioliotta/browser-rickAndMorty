@@ -139,8 +139,17 @@ function App() {
         setFiltrarNombre(inputValor);
         setInputValor(inputValor);
         setBuscarPersonajesFiltrados(RESULTADOS);
+        MANEJAR_ANIMACION();
       }
     }, 700);
+  };
+
+  const MANEJAR_ANIMACION = () => {
+    const ICON = document.querySelector(".img-morty");
+    ICON.classList.remove("img-morty-animacion");
+    ICON.classList.add("img-morty-animacion");
+
+    setTimeout(() => ICON.classList.remove("img-morty-animacion"), 2000);
   };
 
   function cambiarTamañoFuente(elemento) {

@@ -93,10 +93,17 @@ color: rgb(255, 84, 84);
 /*? Form */
 .App form {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: center;
   align-items:center;
   margin-bottom: 30px;
+}
+.hijo-form{
+  margin-top: 1rem;
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
 }
 .App form input {
   font-size: 20px;
@@ -145,6 +152,30 @@ color: rgb(255, 84, 84);
 .input-form-red::placeholder {
   color: rgb(255, 0, 0);
   font-weight: bold;
+}
+.img-morty {
+  width: auto;
+  height: 3rem;
+  transition-duration: .3s;
+}
+.img-morty:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+.img-morty-animacion {
+  animation-name: giro;
+  animation-duration: 2s;
+  animation-iteration-count: 1;
+}
+@keyframes giro {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+  
 }
 
 
@@ -285,9 +316,6 @@ color: gold;
 
 /*? Pantallas pequeñas*/
 @media only screen and (max-width: 600px) {
-  .App form {
-    flex-direction: column;
-  }
   .App form input {
     margin-right: 0;
     margin-bottom: 10px;

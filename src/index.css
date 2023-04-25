@@ -137,18 +137,40 @@ color: rgb(255, 84, 84);
   height: 2.7rem;
 }
 .contenedor-btn-form:hover {
-  background-color: transparent;
-  outline: none;
+  cursor: pointer;
 }
 .lupa-icono {
   font-size: 2.5rem;
   padding: 3px;
   transition-duration: .1s;
 }
-.lupa-icono:hover {
-  cursor: pointer;
-  transform: scale(1.3);
+
+.lupa-icono-animacion {
+  animation-name: giroLupa;
+  animation-duration: 2s;
+  animation-iteration-count: 1;
 }
+@keyframes giroLupa {
+  0% {
+    transform: translate(0);
+  }
+  25% {
+    transform: translate(8px, 0);
+  }
+  50% {
+    transform: translate(0, 8px);
+  }
+  75% {
+    transform: translate(-8px, 0);
+  }
+  100% {
+    transform: translate(0);
+  }
+}
+
+
+
+
 .input-form-red::placeholder {
   color: rgb(255, 0, 0);
   font-weight: bold;
@@ -163,11 +185,11 @@ color: rgb(255, 84, 84);
   transform: scale(1.1);
 }
 .img-morty-animacion {
-  animation-name: giro;
+  animation-name: giroMorty;
   animation-duration: 2s;
   animation-iteration-count: 1;
 }
-@keyframes giro {
+@keyframes giroMorty {
   0% {
     transform: rotate(0deg);
   }

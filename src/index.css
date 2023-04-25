@@ -171,7 +171,6 @@ color: rgb(255, 84, 84);
   color: rgb(255, 0, 0);
   font-weight: bold;
 }
-
 .img-morty {
   width: auto;
   height: 3rem;
@@ -179,7 +178,6 @@ color: rgb(255, 84, 84);
 }
 .img-morty:hover {
   cursor: pointer;
-  transform: scale(1.1);
 }
 .img-morty-animacion {
   animation-name: giroMorty;
@@ -195,10 +193,6 @@ color: rgb(255, 84, 84);
     transform: rotate(360deg);
   }  
 }
-
-
-
-
 
 /*? Buscar Personaje Texto */
 .cuadroDeBusqueda {

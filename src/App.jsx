@@ -109,13 +109,12 @@ function App() {
 
   const MANEJAR_INPUT = e => setInputValor(e.target.value);
 
-  const MANEJAR_MORTY_ANIMACION = () => {
-    const ICON = document.querySelector(".img-morty");
-    ICON.classList.remove("img-morty-animacion");
-    ICON.classList.add("img-morty-animacion");
-
-    setTimeout(() => ICON.classList.remove("img-morty-animacion"), 2000);
-  };
+  const ICON = document.querySelector(".img-morty");
+  // const MANEJAR_MORTY_ANIMACION = () => {
+  //   ICON.classList.remove("img-morty-animacion");
+  //   ICON.classList.add("img-morty-animacion");
+  //   // setTimeout(() => ICON.classList.remove("img-morty-animacion"), 2000);
+  // };
 
   const MANEJAR_LUPA_ANIMACION = () => {
     const ICON = document.querySelector(".lupa-icono");
@@ -127,9 +126,11 @@ function App() {
 
   const MANEJAR_LUPA_INPUT = async () => {
     setCargando(true);
+    ICON.classList.remove("img-morty-animacion");
     MANEJAR_LUPA_ANIMACION();
     const RESULTADOS = await filtrarPersonajes(inputValor);
     const INPUT = document.getElementById("input-form");
+    ICON.classList.toggle("img-morty-animacion");
 
     if (inputValor === "") {
       setCargando(false);
@@ -156,7 +157,6 @@ function App() {
         setFiltrarNombre(inputValor);
         setInputValor(inputValor);
         setBuscarPersonajesFiltrados(RESULTADOS);
-        MANEJAR_MORTY_ANIMACION();
       }
     }, 700);
   };

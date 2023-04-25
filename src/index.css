@@ -167,14 +167,11 @@ color: rgb(255, 84, 84);
     transform: translate(0);
   }
 }
-
-
-
-
 .input-form-red::placeholder {
   color: rgb(255, 0, 0);
   font-weight: bold;
 }
+
 .img-morty {
   width: auto;
   height: 3rem;
@@ -196,9 +193,11 @@ color: rgb(255, 84, 84);
 
   100% {
     transform: rotate(360deg);
-  }
-  
+  }  
 }
+
+
+
 
 
 /*? Buscar Personaje Texto */

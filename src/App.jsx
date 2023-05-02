@@ -121,13 +121,13 @@ function App() {
   };
 
   const MANEJAR_LUPA_INPUT = async () => {
-    setCargando(true);
     ICON.classList.remove("img-morty-animacion");
+    setCargando(true);
+    // ICON.classList.remove("img-morty-animacion");
     MANEJAR_LUPA_ANIMACION();
-    ICON.classList.toggle("img-morty-animacion");
     const RESULTADOS = await filtrarPersonajes(inputValor);
     const INPUT = document.getElementById("input-form");
-
+    ICON.classList.add("img-morty-animacion");
     if (inputValor === "") {
       setCargando(false);
       setFiltrarBusqueda(true);

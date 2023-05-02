@@ -13,7 +13,7 @@ import ListaPersonajesFiltrados from "./components/ListaPersonajesFiltrados";
 TODO:
 -
 Centrar img con input (móvil),
-Arreglar 
+Mantener posición actual cuando salgo de 'Carta'
 */
 
 function App() {

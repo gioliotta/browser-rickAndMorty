@@ -12,7 +12,8 @@ import ListaPersonajesFiltrados from "./components/ListaPersonajesFiltrados";
 /*
 TODO:
 -
-Centrar img con input (móvil)
+Centrar img con input (móvil),
+Arreglar 
 */
 
 function App() {
@@ -110,11 +111,6 @@ function App() {
   const MANEJAR_INPUT = e => setInputValor(e.target.value);
 
   const ICON = document.querySelector(".img-morty");
-  // const MANEJAR_MORTY_ANIMACION = () => {
-  //   ICON.classList.remove("img-morty-animacion");
-  //   ICON.classList.add("img-morty-animacion");
-  //   // setTimeout(() => ICON.classList.remove("img-morty-animacion"), 2000);
-  // };
 
   const MANEJAR_LUPA_ANIMACION = () => {
     const ICON = document.querySelector(".lupa-icono");
@@ -128,9 +124,9 @@ function App() {
     setCargando(true);
     ICON.classList.remove("img-morty-animacion");
     MANEJAR_LUPA_ANIMACION();
+    ICON.classList.toggle("img-morty-animacion");
     const RESULTADOS = await filtrarPersonajes(inputValor);
     const INPUT = document.getElementById("input-form");
-    ICON.classList.toggle("img-morty-animacion");
 
     if (inputValor === "") {
       setCargando(false);

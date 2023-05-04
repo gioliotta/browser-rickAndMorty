@@ -35,13 +35,16 @@ function App() {
     const URL_RICK_AND_MORTY = `https://rickandmortyapi.com/api/character?page=${numeroPaginaActual}`;
     const TIEMPO_CARGA = 900;
 
-    fetch(URL_RICK_AND_MORTY)
-      .then(res => res.json())
-      .then(info => {
-        setPersonajes(info.results);
-        setTimeout(() => setCargando(false), TIEMPO_CARGA);
-      })
-      .catch(error => console.log(error));
+    try {
+      fetch(URL_RICK_AND_MORTY)
+        .then(res => res.json())
+        .then(info => {
+          setPersonajes(info.results);
+          setTimeout(() => setCargando(false), TIEMPO_CARGA);
+        });
+    } catch (error) {
+      console.log(error);
+    }
   }, [numeroPaginaActual]);
 
   const DETECTAR_RESOLUCION = window.matchMedia(
@@ -63,19 +66,24 @@ function App() {
     const ENCONTRAR_PERSONAJES = [];
     let pagina = 1;
 
-    while (true) {
-      const URL_RICK_AND_MORTY = `https://rickandmortyapi.com/api/character?page=${pagina}`;
-      const RES = await fetch(URL_RICK_AND_MORTY);
-      const data = await RES.json();
-      ENCONTRAR_PERSONAJES.push(...data.results);
+    try {
+      while (true) {
+        const URL_RICK_AND_MORTY = `https://rickandmortyapi.com/api/character?page=${pagina}`;
+        const RES = await fetch(URL_RICK_AND_MORTY);
+        const data = await RES.json();
+        ENCONTRAR_PERSONAJES.push(...data.results);
 
-      if (data.info.next === null) break;
-      pagina++;
+        if (data.info.next === null) break;
+        pagina++;
+      }
+
+      return ENCONTRAR_PERSONAJES.filter(personaje =>
+        personaje.name.toLowerCase().includes(terminoBusqueda.toLowerCase()),
+      );
+    } catch (error) {
+      console.log(error);
+      return [];
     }
-
-    return ENCONTRAR_PERSONAJES.filter(personaje =>
-      personaje.name.toLowerCase().includes(terminoBusqueda.toLowerCase()),
-    );
   }
 
   const BOTON_TODOS_PERSONAJES = () => {
@@ -171,6 +179,16 @@ function App() {
     if (elemento.textContent.length > 34) {
       elemento.style.fontSize = "8px";
     }
+  }
+
+  const [controlarScroll, setControlarScroll] = useState(null);
+
+  useEffect(() => {
+    setControlarScroll(window.scrollY);
+  }, []);
+
+  if (!cartaPersonaje) {
+    window.scrollTo(0, controlarScroll);
   }
 
   return (

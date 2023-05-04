@@ -12,7 +12,7 @@ export default function CartaPersonaje({
 }) {
   return (
     <div className="contenedor-carta">
-      {window.scrollTo(0, 0)}
+      {window.scroll(0, 0)}
       <Atras
         onClick={() => setCartaPersonaje(false)}
         className="carta-boton-atras"
